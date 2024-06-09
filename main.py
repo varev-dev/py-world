@@ -44,9 +44,6 @@ if __name__ == '__main__':
     text_area.grid(row=1, column=1, columnspan=3, rowspan=19, padx=10, pady=10, sticky="nsew")
 
     # Insert sample text into the text area
-    sample_texts = ["text 1", "text 2", "text 1", "text 2", "text 1", "text 2", "text 1", "text 2"]
-    for text in sample_texts:
-        text_area.insert(tk.END, text + "\n")
 
     # Start the Tkinter event loop
     root.mainloop()
