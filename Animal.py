@@ -1,4 +1,3 @@
-import Direction
 import Position
 import Organism
 import World
@@ -16,10 +15,3 @@ class Animal(Organism.Organism):
             self.world.organisms.remove(other)
         else:
             self.world.organisms.remove(self)
-
-    def get_random_possible_direction(self, organism: Organism.Organism):
-        checked = []
-
-    def is_every_direction_checked(self):
-        for i in range(0, 8):
-
