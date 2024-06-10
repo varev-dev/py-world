@@ -45,14 +45,14 @@ class Organism:
         if direction == Dire.NORTH or direction == Dire.NORTHEAST or direction == Dire.NORTHWEST:
             if self.position.y - self.move_size < 0:
                 return False
-        if direction == Dire.SOUTH or direction == Dire.SOUTHEAST or direction == Dire.SOUTHWEST:
+        elif direction == Dire.SOUTH or direction == Dire.SOUTHEAST or direction == Dire.SOUTHWEST:
             if self.position.y + self.move_size >= self.world.height:
                 return False
 
-        if direction == Dire.EAST or direction == Dire.NORTHEAST or direction == Dire.SOUTHEAST:
+        if direction == Dire.WEST or direction == Dire.NORTHWEST or direction == Dire.SOUTHWEST:
             if self.position.x - self.move_size < 0:
                 return False
-        if direction == Dire.WEST or direction == Dire.NORTHWEST or direction == Dire.SOUTHWEST:
+        elif direction == Dire.EAST or direction == Dire.NORTHEAST or direction == Dire.SOUTHEAST:
             if self.position.x + self.move_size >= self.world.width:
                 return False
 
