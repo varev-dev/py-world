@@ -11,7 +11,10 @@ class Animal(Organism):
         direction = super().get_random_possible_direction()
 
         if direction is not None:
+            self.world.fields[self.position.y][self.position.x] = None
             self.position.update(direction, self.world, self.move_size)
+            self.world.messages.append(str(self.position.x) + " " + str(self.position.y))
+            self.world.fields[self.position.y][self.position.x] = self
 
     def collision(self, other: Organism):
         if self.power >= other.power:

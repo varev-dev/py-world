@@ -23,20 +23,20 @@ class Organism:
         self.color = color
 
     def print(self, canvas: tk.Canvas):
-        size_x = self.world.width / canvas.winfo_width()
-        size_y = self.world.height / canvas.winfo_height()
+        size_x = canvas.winfo_width() / self.world.width
+        size_y = canvas.winfo_height() / self.world.height
 
         x0 = size_x * self.position.x
         y0 = size_y * self.position.y
         x1 = size_x * (self.position.x + 1)
-        y1 = size_x * (self.position.x + 1)
+        y1 = size_y * (self.position.y + 1)
 
         canvas.create_rectangle(x0, y0, x1, y1, fill=self.color)
 
     @staticmethod
-    def is_every_direction_checked(checked: []):
+    def is_every_direction_checked(checked):
         for direction in Dire:
-            if not checked[direction]:
+            if not checked[direction.value]:
                 return False
 
         return True
@@ -56,14 +56,17 @@ class Organism:
             if self.position.x + self.move_size >= self.world.width:
                 return False
 
-    def get_random_possible_direction(self):
-        checked = []
+        return True
 
-        while self.is_every_direction_checked(checked):
+    def get_random_possible_direction(self):
+        checked = [False] * len(Dire)
+
+        while not self.is_every_direction_checked(checked):
             random_direction = random.choice(list(Dire))
 
-            if checked[random_direction]:
+            if checked[random_direction.value]:
                 continue
+            checked[random_direction.value] = True
 
             if not self.is_move_possible(random_direction):
                 continue

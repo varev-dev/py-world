@@ -1,7 +1,5 @@
 from enum import Enum
 
-import Organism
-
 
 class Direction(Enum):
     WEST = 0
