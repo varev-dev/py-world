@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import Text
+from tkinter import simpledialog, Text
 
 from Organism import Organism
 from Animal import Animal
@@ -10,6 +10,23 @@ from World import World
 def next_turn(wrd: World, rt: tk.Tk, cnv: tk.Canvas, text: tk.Text):
     wrd.make_turn()
     wrd.print(cnv, text)
+
+
+def create_new_world():
+    global world
+    width = simpledialog.askinteger("Input", "Enter the width of the world:")
+    height = simpledialog.askinteger("Input", "Enter the height of the world:")
+
+    if width is None or height is None:
+        return None
+
+    world = World(width, height, 0)
+    org = Animal(world, Position(0, 0), 2, 2, 1, 'blue')
+    world.add_organism(org)
+
+    canvas.delete('all')
+    text_area.delete('1.0', tk.END)
+    world.print(canvas, text_area)
 
 
 if __name__ == '__main__':
@@ -41,11 +58,11 @@ if __name__ == '__main__':
     button_frame.grid_columnconfigure(2, weight=1)
 
     # Set up the buttons inside the frame
-    btn_new = tk.Button(button_frame, text="new game")
+    btn_new = tk.Button(button_frame, text="new game", command=create_new_world)
     btn_save = tk.Button(button_frame, text="save game")
     btn_load = tk.Button(button_frame, text="load game")
     btn_skill = tk.Button(button_frame, text="use skill")
-    btn_next = tk.Button(button_frame, text="next round")
+    btn_next = tk.Button(button_frame, text="next round", command=lambda: next_turn(world, root, canvas, text_area))
 
     # Set up the text area
     text_area = Text(root, height=45, width=45)
@@ -56,10 +73,7 @@ if __name__ == '__main__':
     btn_save.grid(row=0, column=1, padx=5, pady=5, sticky="ew")
     btn_load.grid(row=0, column=2, padx=5, pady=5, sticky="ew")
     btn_skill.grid(row=1, column=0, columnspan=2, padx=5, pady=5, sticky="ew")
-
-    canvas.delete('all')
     btn_next.grid(row=1, column=2, padx=5, pady=5, sticky="ew")
-    btn_next.config(command=lambda: next_turn(world, root, canvas, text_area))
 
     # Start the Tkinter event loop
     root.mainloop()
