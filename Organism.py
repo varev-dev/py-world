@@ -6,14 +6,14 @@ from tkinter import Canvas
 from abc import ABC, abstractmethod
 from Direction import Direction as Dire
 
-import World
-import Position
+from World import World
+from Position import Position
 
 
 class Organism:
     DELAY = 5
 
-    def __init__(self, world: World.World, position: Position.Position, power, initiative, move_size, color):
+    def __init__(self, world: World, position: Position, power, initiative, move_size, color):
         self.world = world
         self.position = position
         self.power = power
@@ -33,7 +33,8 @@ class Organism:
 
         canvas.create_rectangle(x0, y0, x1, y1, fill=self.color)
 
-    def is_every_direction_checked(self, checked: []):
+    @staticmethod
+    def is_every_direction_checked(checked: []):
         for direction in Dire:
             if not checked[direction]:
                 return False
