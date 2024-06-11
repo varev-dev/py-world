@@ -8,7 +8,7 @@ class World:
         self.width = width
         self.height = height
         self.turn = turn
-        self.fields = [[0 for _ in range(height)] for _ in range(width)]
+        self.fields = [[0 for _ in range(width)] for _ in range(height)]
         self.organisms = []
         self.messages = []
 

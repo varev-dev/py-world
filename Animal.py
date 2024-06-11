@@ -16,7 +16,6 @@ class Animal(Organism):
             if self.world.fields[pos.y][pos.x] == 0:
                 self.world.fields[self.position.y][self.position.x] = 0
                 self.position.update(direction, self.world, self.move_size)
-                self.world.messages.append(str(self.position.x) + " " + str(self.position.y))
                 self.world.fields[self.position.y][self.position.x] = self
             else:
                 self.world.fields[pos.y][pos.x].collision(self)
