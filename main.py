@@ -63,7 +63,7 @@ class Game:
 
     def read_pressed(self, event):
         key = event.char.lower()
-        if self.world is None:
+        if self.world is None or self.world.human is None:
             return
 
         if key in ('q', 'w', 'e', 'a', 'd', 'z', 'x', 'c'):
@@ -88,20 +88,7 @@ class Game:
             return None
 
         self.world = World(width, height, 0)
-        human = Human(self.world, Position(4, 4))
-        self.world.human = human
-        self.world.add_organism(human)
-        organism1 = CyberSheep(self.world, Position(2, 2))
-        self.world.add_organism(organism1)
-        organism2 = Hogweed(self.world, Position(2, 0))
-        self. world.add_organism(organism2)
-        wolf = Antelope(self.world, Position(0, 1))
-        self.world.add_organism(wolf)
-        fox = Belladonna(self.world, Position(1, 1))
-        self.world.add_organism(fox)
-        fox = Turtle(self.world, Position(1, 0))
-        self.world.add_organism(fox)
-
+        self.world.generate(0.25, 0)
         self.canvas.delete('all')
         self.text.delete('1.0', tk.END)
         self.world.print(self.canvas, self.text)

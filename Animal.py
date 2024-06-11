@@ -11,7 +11,7 @@ class Animal(Organism):
 
     def action(self):
         direction = super().get_random_possible_direction(not isinstance(self, Fox))
-        self.world.messages.append(self.__class__.__name__ + " on move")
+        # self.world.messages.append(self.__class__.__name__ + " on move")
         if direction is not None:
             pos = self.position.updated_position(direction, self.world, self.move_size)
 
@@ -54,6 +54,19 @@ class Fox(Animal):
 class Sheep(Animal):
     def __init__(self, world: World, position: Position, power=4, initiative=4, move_size=1, color='lightgray'):
         super().__init__(world, position, power, initiative, move_size, color)
+
+    def collision(self, other: Organism):
+        if isinstance(other, (CyberSheep, Sheep)):
+            pos = self.get_adjacent_empty_field()
+            if pos is None:
+                return
+            org = Sheep(self.world, pos)
+            self.world.organisms.append(org)
+            self.world.fields[pos.y][pos.x] = org
+            self.world.messages.append(Sheep.__name__ + " was born (x:" + str(pos.x) + "; y:" + str(pos.y) + ")")
+            return
+
+        super().collision(other)
 
 
 class Wolf(Animal):
@@ -119,7 +132,6 @@ class CyberSheep(Sheep):
             self.world.fields[self.position.y][self.position.x] = self
         else:
             self.world.fields[pos.y][pos.x].collision(self)
-
 
 class Human(Animal):
     DELAY = 5
