@@ -1,6 +1,5 @@
 import tkinter as tk
-from tkinter import simpledialog, Text
-
+from tkinter import simpledialog, Text, messagebox
 from Organism import Organism
 from Plant import *
 from Animal import *
@@ -109,6 +108,10 @@ class Game:
     def load_world(self):
         filename = simpledialog.askstring("Filename", "Enter a filename:", parent=self.root)
         if filename is None:
+            return
+        import os
+        if not os.path.exists(filename):
+            messagebox.showwarning("Warning", f"File named {filename} don't exists.")
             return
         if self.world is None:
             self.world = World(0, 0, 0)
