@@ -8,6 +8,8 @@ from World import World
 
 
 def next_turn(wrd: World, rt: tk.Tk, cnv: tk.Canvas, text: tk.Text):
+    if wrd is None:
+        return
     wrd.make_turn()
     wrd.print(cnv, text)
 
@@ -28,6 +30,8 @@ def create_new_world():
     world.add_organism(organism1)
     organism2 = Sheep(world, Position(1, 2))
     world.add_organism(organism2)
+    wolf = Wolf(world, Position(0, 1))
+    world.add_organism(wolf)
 
     canvas.delete('all')
     text_area.delete('1.0', tk.END)
@@ -38,9 +42,7 @@ if __name__ == '__main__':
     root = tk.Tk()
     root.title("Py World")
 
-    world = World(10, 10, 2)
-    organism = Sheep(world, Position(2, 2))
-    world.add_organism(organism)
+    world = None
 
     # Configure grid weights for proper stretching
     root.grid_columnconfigure(1, weight=1)

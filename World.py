@@ -31,7 +31,9 @@ class World:
         self.organisms.remove(organism)
 
     def make_turn(self):
+        self.organisms.sort(key=lambda organ: organ.initiative, reverse=True)
         org_copy = self.organisms.copy()
 
-        for org in self.organisms:
-            org.action()
+        for org in org_copy:
+            if org in self.organisms:
+                org.action()

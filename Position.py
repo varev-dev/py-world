@@ -28,7 +28,7 @@ class Position:
         if dire == Direction.NORTH or dire == Direction.NORTHWEST or dire == Direction.NORTHEAST:
             position.y = self.y - move_size if self.y - move_size >= 0 else 0
         elif dire == Direction.SOUTH or dire == Direction.SOUTHWEST or dire == Direction.SOUTHEAST:
-            position.y = self.y + move_size if self.y + move_size < world.height else world.height-1
+            position.y = self.y + move_size if self.y + move_size < world.height else world.height - 1
 
         if dire == Direction.WEST or dire == Direction.NORTHWEST or dire == Direction.SOUTHWEST:
             position.x = self.x - move_size if self.x - move_size >= 0 else 0
