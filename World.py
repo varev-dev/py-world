@@ -130,7 +130,7 @@ class World:
                         org = class_name(self, pos, power)
 
                         if class_name is Animal.Human:
-                            org.delay = data[4]
+                            org.delay = int(data[4])
                             self.human = org
 
                         self.add_organism(org)

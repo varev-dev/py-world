@@ -138,10 +138,10 @@ class CyberSheep(Sheep):
 class Human(Animal):
     DELAY = 5
 
-    def __init__(self, world: World, position: Position):
+    def __init__(self, world: World, position: Position, delay=0):
         super().__init__(world, position, 5, 4, 1, 'black')
         self.direction = None
-        self.delay = 0
+        self.delay = delay
 
     def action(self):
         self.delay = max(self.delay - 1, 0)
