@@ -58,7 +58,7 @@ class Organism:
 
         return True
 
-    def get_random_possible_direction(self):
+    def get_random_possible_direction(self, can_be_stronger=True):
         checked = [False] * len(Dire)
 
         while not self.is_every_direction_checked(checked):
@@ -70,6 +70,12 @@ class Organism:
 
             if not self.is_move_possible(random_direction):
                 continue
+
+            if not can_be_stronger:
+                pos = self.position.updated_position(random_direction, self.world, self.move_size)
+                org = self.world.fields[pos.y][pos.x]
+                if org != 0 and type(org) is not type(self) and org.power > self.power:
+                    continue
 
             return random_direction
 

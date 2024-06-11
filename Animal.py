@@ -1,3 +1,5 @@
+import random
+
 from Position import Position
 from Organism import Organism
 from World import World
@@ -8,8 +10,8 @@ class Animal(Organism):
         super().__init__(world, position, power, initiative, move_size, color)
 
     def action(self):
-        direction = super().get_random_possible_direction()
-
+        direction = super().get_random_possible_direction(isinstance(self, Fox))
+        self.world.messages.append(self.__class__.__name__ + " on move")
         if direction is not None:
             pos = self.position.updated_position(direction, self.world, self.move_size)
 
@@ -45,11 +47,74 @@ class Animal(Organism):
         self.world.messages.append(message)
 
 
-class Sheep(Animal):
+class Fox(Animal):
     def __init__(self, world: World, position: Position):
+        super().__init__(world, position, 3, 7, 1, 'orange')
+
+
+class Sheep(Animal):
+    def __init__(self, world: World, position: Position, power=1, initiative=1, move_size=1, color='black'):
         super().__init__(world, position, 4, 4, 1, 'lightgray')
 
 
 class Wolf(Animal):
     def __init__(self, world: World, position: Position):
         super().__init__(world, position, 9, 5, 1, 'gray')
+
+
+class Turtle(Animal):
+    def __init__(self, world: World, position: Position):
+        super().__init__(world, position, 2, 1, 1, 'darkgreen')
+
+    def collision(self, other: Organism):
+        if other.power < 5:
+            self.world.messages.append(self.__class__.__name__ + " reflects attack")
+            return
+
+        super().collision(other)
+
+
+class Antelope(Animal):
+    def __init__(self, world: World, position: Position):
+        super().__init__(world, position, 4, 4, 2, 'brown4')
+
+    def collision(self, other: Organism):
+        if random.random() < 0.5:
+            pos = super().get_adjacent_empty_field()
+            if pos is not None:
+                self.world.fields[self.position.y][self.position.x] = other
+                self.world.fields[pos.y][pos.x] = self
+                self.world.messages.append(self.__class__.__name__ + " runs away from the fight")
+                return
+
+        super().collision(other)
+
+
+class CyberSheep(Sheep):
+    def __init__(self, world: World, position: Position):
+        super().__init__(world, position, 11, 4, 1, 'pink')
+
+    def action(self):
+        closest_org = None
+        closest_dist = None
+        for org in self.world.organisms:
+            if type(org) is not Fox:
+                continue
+
+            dist = self.position.get_distance_between(org)
+
+            if closest_org is None or dist < closest_dist:
+                closest_org = org
+                closest_dist = dist
+
+        if closest_org is None:
+            super().action()
+            return
+
+        pos = self.position.follow_position(closest_org, self.move_size)
+        if self.world.fields[pos.y][pos.x] == 0:
+            self.world.fields[self.position.y][self.position.x] = 0
+            self.position = pos
+            self.world.fields[self.position.y][self.position.x] = self
+        else:
+            self.world.fields[pos.y][pos.x].collision(self)

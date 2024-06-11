@@ -36,3 +36,29 @@ class Position:
             position.x = self.x + move_size if self.x + move_size < world.width else world.width - 1
 
         return position
+
+    def get_distance_between(self, compare):
+        dist_x = abs(self.x - compare.position.x)
+        dist_y = abs(self.y - compare.position.y)
+
+        return min(dist_x, dist_y)
+
+    def follow_position(self, org, move_size):
+        if org.position.x > self.x and org.position.y > self.y:
+            return Position(min(self.x + move_size, org.world.width - 1), min(self.y + move_size, org.world.height - 1))
+        elif org.position.x > self.x and org.position.y < self.y:
+            return Position(min(self.x + move_size, org.world.width - 1), max(self.y - move_size, 0))
+        elif org.position.x < self.x and org.position.y < self.y:
+            return Position(max(self.x - move_size, 0), max(self.y - move_size, 0))
+        elif org.position.x < self.x and org.position.y > self.y:
+            return Position(max(self.x - move_size, 0), min(self.y + move_size, org.world.height - 1))
+        elif org.position.x < self.x:
+            return Position(max(self.x - move_size, 0), self.y)
+        elif org.position.x > self.x:
+            return Position(min(self.x + move_size, org.world.width - 1), self.y)
+        elif org.position.y < self.y:
+            return Position(self.x, min(self.y - move_size, org.world.height - 1))
+        elif org.position.y > self.y:
+            return Position(self.x, max(self.y - move_size, 0))
+        else:
+            return self

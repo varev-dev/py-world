@@ -12,8 +12,14 @@ class Game:
         self.world = None
         self.root = tk.Tk()
         self.root.title("Py World")
+        self.text = Text(self.root, height=45, width=45)
         self.canvas = tk.Canvas(self.root, width=800, height=800, bg="white")
         self.button_frame = tk.Frame(self.root)
+        self.btn_next = None
+        self.btn_save = None
+        self.btn_skill = None
+        self.btn_load = None
+        self.btn_new = None
 
     def setup(self):
         # Configure grid weights for proper stretching
@@ -38,7 +44,6 @@ class Game:
         self.btn_next = tk.Button(self.button_frame, text="next round", command=lambda: self.next_turn())
 
         # Set up the text area
-        self.text = Text(self.root, height=45, width=45)
         self.text.grid(row=1, column=1, columnspan=3, rowspan=19, padx=10, pady=10, sticky="nsew")
 
         # Arrange the buttons in a grid within the frame
@@ -69,12 +74,16 @@ class Game:
             return None
 
         self.world = World(width, height, 0)
-        organism1 = Sheep(self.world, Position(2, 2))
+        organism1 = CyberSheep(self.world, Position(2, 2))
         self.world.add_organism(organism1)
         organism2 = Sheep(self.world, Position(1, 2))
         self. world.add_organism(organism2)
-        wolf = Wolf(self.world, Position(0, 1))
+        wolf = Antelope(self.world, Position(0, 1))
         self.world.add_organism(wolf)
+        fox = Fox(self.world, Position(1, 1))
+        self.world.add_organism(fox)
+        fox = Turtle(self.world, Position(1, 0))
+        self.world.add_organism(fox)
 
         self.canvas.delete('all')
         self.text.delete('1.0', tk.END)
