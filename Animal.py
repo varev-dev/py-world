@@ -42,7 +42,8 @@ class Animal(Organism):
             message += type(other).__name__ + " killed " + type(self).__name__
             self.world.fields[self.position.y][self.position.x] = other
             other.position = self.position
-            self.world.organisms.remove(self)
+            if self in self.world.organisms:
+                self.world.organisms.remove(self)
         self.world.messages.append(message)
 
 
@@ -133,6 +134,7 @@ class CyberSheep(Sheep):
         else:
             self.world.fields[pos.y][pos.x].collision(self)
 
+
 class Human(Animal):
     DELAY = 5
 
@@ -142,6 +144,7 @@ class Human(Animal):
         self.delay = 0
 
     def action(self):
+        self.delay = max(self.delay - 1, 0)
         if self.direction is None:
             return
 
@@ -156,7 +159,11 @@ class Human(Animal):
             self.world.fields[pos.y][pos.x].collision(self)
 
     def collision(self, other: Organism):
-        if self.delay > Human.DELAY:
+        if type(other) is Human:
+            self.world.fields[other.position.y][other.position.x] = 0
+            return
+
+        if self.delay > Human.DELAY and other.power > self.power:
             pos = super().get_adjacent_empty_field()
             self.world.messages.append(self.__class__.__name__ + " survived because of ability")
 
@@ -190,3 +197,12 @@ class Human(Animal):
             self.direction = key_to_direction[key]
         else:
             self.direction = None
+
+    def use_ability(self):
+        if self.delay == 0:
+            self.delay = Human.DELAY * 2
+            self.world.messages.append("Used ability!")
+        elif self.delay > Human.DELAY:
+            self.world.messages.append("Ability is already active")
+        else:
+            self.world.messages.append("Available in " + str(self.delay) + " rounds")

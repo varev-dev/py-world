@@ -74,13 +74,18 @@ class Hogweed(Plant):
         for direction in Direction:
             pos = self.position.updated_position(direction, self.world, self.move_size)
 
-            if pos is self.position:
+            if pos.x == self.position.x and pos.y == self.position.y:
                 continue
 
             org = self.world.fields[pos.y][pos.x]
 
-            if org == 0 or type(org) is CyberSheep:
+            if org == 0 or isinstance(org, (CyberSheep, Hogweed)):
                 continue
 
+            self.world.messages.append(self.__class__.__name__ + " killed " + org.__class__.__name__)
             self.world.fields[pos.y][pos.x] = 0
             self.world.organisms.remove(org)
+
+    def collision(self, other: Organism):
+        self.world.messages.append(self.__class__.__name__ + " killed " + other.__class__.__name__)
+        self.world.fields[other.position.y][other.position.x] = 0

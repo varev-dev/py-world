@@ -41,7 +41,7 @@ class Game:
         self.btn_new = tk.Button(self.button_frame, text="new game", command=self.create_new_world)
         self.btn_save = tk.Button(self.button_frame, text="save game")
         self.btn_load = tk.Button(self.button_frame, text="load game")
-        self.btn_skill = tk.Button(self.button_frame, text="use skill")
+        self.btn_skill = tk.Button(self.button_frame, text="use skill", command=self.skill_activate)
         self.btn_next = tk.Button(self.button_frame, text="next round", command=lambda: self.next_turn())
 
         # Set up the text area
@@ -61,6 +61,11 @@ class Game:
         # Start the Tkinter event loop
         self.root.mainloop()
 
+    def skill_activate(self):
+        if self.world is None or self.world.human is None:
+            return
+        self.world.human.use_ability()
+
     def read_pressed(self, event):
         key = event.char.lower()
         if self.world is None or self.world.human is None:
@@ -78,17 +83,17 @@ class Game:
         self.canvas.focus_set()
 
     def create_new_world(self):
-        width = simpledialog.askinteger("Width", "Enter the width of the world:")
-        height = simpledialog.askinteger("Height", "Enter the height of the world:")
+        width = simpledialog.askinteger("Width", "Enter the width of the world:", parent=self.root)
+        height = simpledialog.askinteger("Height", "Enter the height of the world:", parent=self.root)
 
-        # plants = simpledialog.askfloat("Plants", "Enter percent of plants in world:")
-        # animals = simpledialog.askfloat("Animals", "Enter percent of animals in world:")
+        plants = simpledialog.askfloat("Plant rate", "Enter in range 0-1:", parent=self.root, minvalue=0, maxvalue=1)
+        animals = simpledialog.askfloat("Animal rate", "Enter in range 0-1:", parent=self.root, minvalue=0, maxvalue=1)
 
-        if width is None or height is None:
+        if width is None or height is None or plants is None or animals is None:
             return None
 
         self.world = World(width, height, 0)
-        self.world.generate(0.25, 0)
+        self.world.generate(float(animals), float(plants))
         self.canvas.delete('all')
         self.text.delete('1.0', tk.END)
         self.world.print(self.canvas, self.text)

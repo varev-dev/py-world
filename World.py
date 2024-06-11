@@ -17,6 +17,8 @@ class World:
 
     def print(self, canvas: tk.Canvas, text_area: Text):
         text_area.delete('1.0', tk.END)
+        text_area.insert(tk.END, "==== Current round " + str(self.turn) + " ====\n")
+
         for text in self.messages:
             text_area.insert(tk.END, str(text) + "\n")
 
@@ -41,13 +43,13 @@ class World:
             self.fields[y][x] = org
 
     def generate(self, animals_percent, plants_percent):
-        fields = int(self.width * self.height)
+        fields = self.width * self.height
         animals = int(fields * animals_percent)
 
         if animals > fields - 1:
             animals = fields - 1
 
-        plants = fields * plants_percent
+        plants = int(fields * plants_percent)
 
         if plants + animals > fields - 1:
             plants = fields - animals - 1
