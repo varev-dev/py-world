@@ -23,7 +23,7 @@ class Position:
                 self.x += move_size
 
     def updated_position(self, dire: Direction, world: World, move_size):
-        position = Position(0, 0)
+        position = Position(self.x, self.y)
 
         if dire == Direction.NORTH or dire == Direction.NORTHWEST or dire == Direction.NORTHEAST:
             position.y = self.y - move_size if self.y - move_size >= 0 else 0

@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import simpledialog, Text
 
 from Organism import Organism
+from Plant import *
 from Animal import *
 from Position import Position
 from World import World
@@ -52,16 +53,29 @@ class Game:
         self.btn_load.grid(row=0, column=2, padx=5, pady=5, sticky="ew")
         self.btn_skill.grid(row=1, column=0, columnspan=2, padx=5, pady=5, sticky="ew")
         self.btn_next.grid(row=1, column=2, padx=5, pady=5, sticky="ew")
+        self.canvas.focus_set()
+        self.root.bind('<Key>', self.read_pressed)
 
     def run(self):
+        self.canvas.focus_set()
         # Start the Tkinter event loop
         self.root.mainloop()
+
+    def read_pressed(self, event):
+        key = event.char.lower()
+        if self.world is None:
+            return
+
+        if key in ('q', 'w', 'e', 'a', 'd', 'z', 'x', 'c'):
+            self.world.human.update_direction(key)
+            self.next_turn()
 
     def next_turn(self):
         if self.world is None:
             return
         self.world.make_turn()
         self.world.print(self.canvas, self.text)
+        self.canvas.focus_set()
 
     def create_new_world(self):
         width = simpledialog.askinteger("Width", "Enter the width of the world:")
@@ -74,13 +88,16 @@ class Game:
             return None
 
         self.world = World(width, height, 0)
+        human = Human(self.world, Position(4, 4))
+        self.world.human = human
+        self.world.add_organism(human)
         organism1 = CyberSheep(self.world, Position(2, 2))
         self.world.add_organism(organism1)
-        organism2 = Sheep(self.world, Position(1, 2))
+        organism2 = Hogweed(self.world, Position(2, 0))
         self. world.add_organism(organism2)
         wolf = Antelope(self.world, Position(0, 1))
         self.world.add_organism(wolf)
-        fox = Fox(self.world, Position(1, 1))
+        fox = Belladonna(self.world, Position(1, 1))
         self.world.add_organism(fox)
         fox = Turtle(self.world, Position(1, 0))
         self.world.add_organism(fox)

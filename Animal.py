@@ -10,7 +10,7 @@ class Animal(Organism):
         super().__init__(world, position, power, initiative, move_size, color)
 
     def action(self):
-        direction = super().get_random_possible_direction(isinstance(self, Fox))
+        direction = super().get_random_possible_direction(not isinstance(self, Fox))
         self.world.messages.append(self.__class__.__name__ + " on move")
         if direction is not None:
             pos = self.position.updated_position(direction, self.world, self.move_size)
@@ -34,7 +34,6 @@ class Animal(Organism):
             return
 
         message = ""
-
         self.world.fields[other.position.y][other.position.x] = 0
         if self.power >= other.power:
             message += type(self).__name__ + " killed " + type(other).__name__
@@ -53,8 +52,8 @@ class Fox(Animal):
 
 
 class Sheep(Animal):
-    def __init__(self, world: World, position: Position, power=1, initiative=1, move_size=1, color='black'):
-        super().__init__(world, position, 4, 4, 1, 'lightgray')
+    def __init__(self, world: World, position: Position, power=4, initiative=4, move_size=1, color='lightgray'):
+        super().__init__(world, position, power, initiative, move_size, color)
 
 
 class Wolf(Animal):
@@ -97,8 +96,10 @@ class CyberSheep(Sheep):
     def action(self):
         closest_org = None
         closest_dist = None
+        from Plant import Hogweed
+
         for org in self.world.organisms:
-            if type(org) is not Fox:
+            if type(org) is not Hogweed:
                 continue
 
             dist = self.position.get_distance_between(org)
@@ -118,3 +119,62 @@ class CyberSheep(Sheep):
             self.world.fields[self.position.y][self.position.x] = self
         else:
             self.world.fields[pos.y][pos.x].collision(self)
+
+
+class Human(Animal):
+    DELAY = 5
+
+    def __init__(self, world: World, position: Position):
+        super().__init__(world, position, 5, 4, 1, 'black')
+        self.direction = None
+        self.delay = 0
+
+    def action(self):
+        if self.direction is None:
+            return
+
+        self.world.messages.append(self.__class__.__name__ + " on move")
+        pos = self.position.updated_position(self.direction, self.world, self.move_size)
+
+        if self.world.fields[pos.y][pos.x] == 0:
+            self.world.fields[self.position.y][self.position.x] = 0
+            self.position = pos
+            self.world.fields[self.position.y][self.position.x] = self
+        else:
+            self.world.fields[pos.y][pos.x].collision(self)
+
+    def collision(self, other: Organism):
+        if self.delay > Human.DELAY:
+            pos = super().get_adjacent_empty_field()
+            self.world.messages.append(self.__class__.__name__ + " survived because of ability")
+
+            if pos is None or pos is self.position:
+                return
+
+            self.world.fields[other.position.y][other.position.x] = 0
+            self.world.fields[self.position.y][self.position.x] = other
+            other.position = self.position
+            self.world.fields[pos.y][pos.x] = self
+            self.position = pos
+            return
+        else:
+            super().collision(other)
+
+    def update_direction(self, key):
+        from Direction import Direction
+
+        key_to_direction = {
+            'a': Direction.WEST,
+            'q': Direction.NORTHWEST,
+            'w': Direction.NORTH,
+            'e': Direction.NORTHEAST,
+            'd': Direction.EAST,
+            'c': Direction.SOUTHEAST,
+            'x': Direction.SOUTH,
+            'z': Direction.SOUTHWEST
+        }
+
+        if key in key_to_direction:
+            self.direction = key_to_direction[key]
+        else:
+            self.direction = None
