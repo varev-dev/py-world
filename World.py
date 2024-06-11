@@ -17,7 +17,7 @@ class World:
 
     def print(self, canvas: tk.Canvas, text_area: Text):
         text_area.delete('1.0', tk.END)
-        text_area.insert(tk.END, "==== Current round " + str(self.turn) + " ====\n")
+        text_area.insert(tk.END, "======== Current round " + str(self.turn) + " ========\n")
 
         for text in self.messages:
             text_area.insert(tk.END, str(text) + "\n")
@@ -116,12 +116,8 @@ class World:
             from Position import Position
             classes = [Animal.Fox, Animal.Sheep, Animal.CyberSheep, Animal.Antelope, Animal.Turtle, Animal.Wolf,
                        Animal.Human, Plant.Grass, Plant.Sonchus, Plant.Guarana, Plant.Belladonna, Plant.Hogweed]
-            ctr = 1
             for line in file:
                 data = line.strip().split(' ')
-                if ctr == 1:
-                    ctr += 1
-                    continue
                 for class_name in classes:
                     if data[0] == class_name.__name__:
                         pos = Position(int(data[1]), int(data[2]))

@@ -12,7 +12,7 @@ class Game:
     def __init__(self):
         self.world = None
         self.root = tk.Tk()
-        self.root.title("Py World")
+        self.root.title("Py World - s198020")
         self.text = Text(self.root, height=45, width=45)
         self.canvas = tk.Canvas(self.root, width=800, height=800, bg="white")
         self.button_frame = tk.Frame(self.root)
@@ -73,11 +73,13 @@ class Game:
 
         if key in ('q', 'w', 'e', 'a', 'd', 'z', 'x', 'c'):
             self.world.human.update_direction(key)
-            self.next_turn()
+            self.next_turn(False)
 
-    def next_turn(self):
+    def next_turn(self, direct=True):
         if self.world is None:
             return
+        if direct and self.world.human is not None:
+            self.world.human.update_direction(None)
         self.world.make_turn()
         self.world.print(self.canvas, self.text)
         self.canvas.focus_set()
@@ -106,6 +108,8 @@ class Game:
 
     def load_world(self):
         filename = simpledialog.askstring("Filename", "Enter a filename:", parent=self.root)
+        if filename is None:
+            return
         if self.world is None:
             self.world = World(0, 0, 0)
         self.world.load(filename)
