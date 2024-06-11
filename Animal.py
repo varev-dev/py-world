@@ -31,6 +31,7 @@ class Animal(Organism):
             org = type(self)(self.world, pos)
             self.world.organisms.append(org)
             self.world.fields[pos.y][pos.x] = org
+            self.world.messages.append(type(self).__name__ + " was born (x:" + str(pos.x) + "; y:" + str(pos.y) + ")")
             return
 
         if self.power >= other.power:

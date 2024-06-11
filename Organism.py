@@ -88,7 +88,12 @@ class Organism:
             if not self.is_move_possible(random_direction):
                 continue
 
-            return self.position.updated_position(random_direction, self.world, self.move_size)
+            pos = self.position.updated_position(random_direction, self.world, self.move_size)
+
+            if self.world.fields[pos.y][pos.x] != 0:
+                continue
+
+            return pos
 
         return None
 
