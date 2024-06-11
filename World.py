@@ -85,3 +85,54 @@ class World:
 
         if self.human not in self.organisms:
             self.human = None
+
+    def save(self, filename):
+        import Animal
+        with open(filename, 'w') as file:
+            line = f"{self.turn} {self.width} {self.height}\n"
+            file.write(line)
+            for org in self.organisms:
+                line = f"{org.__class__.__name__} {org.position.x} {org.position.y} {org.power}"
+                if type(org) is Animal.Human:
+                    line += f" {org.delay}"
+                line += "\n"
+                file.write(line)
+
+    def load(self, filename):
+        self.human = None
+        self.organisms = []
+        self.messages = []
+
+        with open(filename, 'r') as file:
+            data = file.readline().strip().split(' ')
+
+            self.turn = int(data[0])
+            self.width = int(data[1])
+            self.height = int(data[2])
+            self.fields = [[0 for _ in range(self.width)] for _ in range(self.height)]
+
+            import Animal
+            import Plant
+            from Position import Position
+            classes = [Animal.Fox, Animal.Sheep, Animal.CyberSheep, Animal.Antelope, Animal.Turtle, Animal.Wolf,
+                       Animal.Human, Plant.Grass, Plant.Sonchus, Plant.Guarana, Plant.Belladonna, Plant.Hogweed]
+            ctr = 1
+            for line in file:
+                data = line.strip().split(' ')
+                if ctr == 1:
+                    ctr += 1
+                    continue
+                for class_name in classes:
+                    if data[0] == class_name.__name__:
+                        pos = Position(int(data[1]), int(data[2]))
+                        power = data[3]
+
+                        org = class_name(self, pos, power)
+
+                        if class_name is Animal.Human:
+                            org.delay = data[4]
+                            self.human = org
+
+                        self.add_organism(org)
+
+        self.organisms.sort(key=lambda organ: organ.initiative, reverse=True)

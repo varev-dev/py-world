@@ -39,10 +39,10 @@ class Game:
 
         # Set up the buttons inside the frame
         self.btn_new = tk.Button(self.button_frame, text="new game", command=self.create_new_world)
-        self.btn_save = tk.Button(self.button_frame, text="save game")
-        self.btn_load = tk.Button(self.button_frame, text="load game")
+        self.btn_save = tk.Button(self.button_frame, text="save game", command=self.save_world)
+        self.btn_load = tk.Button(self.button_frame, text="load game", command=self.load_world)
         self.btn_skill = tk.Button(self.button_frame, text="use skill", command=self.skill_activate)
-        self.btn_next = tk.Button(self.button_frame, text="next round", command=lambda: self.next_turn())
+        self.btn_next = tk.Button(self.button_frame, text="next round", command=self.next_turn)
 
         # Set up the text area
         self.text.grid(row=1, column=1, columnspan=3, rowspan=19, padx=10, pady=10, sticky="nsew")
@@ -96,6 +96,19 @@ class Game:
         self.world.generate(float(animals), float(plants))
         self.canvas.delete('all')
         self.text.delete('1.0', tk.END)
+        self.world.print(self.canvas, self.text)
+
+    def save_world(self):
+        if self.world is None:
+            return
+        filename = simpledialog.askstring("Filename", "Enter a filename:", parent=self.root)
+        self.world.save(filename)
+
+    def load_world(self):
+        filename = simpledialog.askstring("Filename", "Enter a filename:", parent=self.root)
+        if self.world is None:
+            self.world = World(0, 0, 0)
+        self.world.load(filename)
         self.world.print(self.canvas, self.text)
 
 

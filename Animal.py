@@ -151,6 +151,9 @@ class Human(Animal):
         self.world.messages.append(self.__class__.__name__ + " on move")
         pos = self.position.updated_position(self.direction, self.world, self.move_size)
 
+        if pos.x == self.position.x and pos.y == self.position.y:
+            return
+
         if self.world.fields[pos.y][pos.x] == 0:
             self.world.fields[self.position.y][self.position.x] = 0
             self.position = pos

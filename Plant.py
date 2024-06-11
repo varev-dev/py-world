@@ -32,13 +32,13 @@ class Plant(Organism):
 
 
 class Grass(Plant):
-    def __init__(self, world: World, position: Position):
-        super().__init__(world, position, 0, 'lightgreen')
+    def __init__(self, world: World, position: Position, power=0):
+        super().__init__(world, position, power, 'lightgreen')
 
 
 class Sonchus(Plant):
-    def __init__(self, world: World, position: Position):
-        super().__init__(world, position, 0, 'yellow')
+    def __init__(self, world: World, position: Position, power=0):
+        super().__init__(world, position, power, 'yellow')
 
     def action(self):
         for i in range(0, 3):
@@ -46,8 +46,8 @@ class Sonchus(Plant):
 
 
 class Guarana(Plant):
-    def __init__(self, world: World, position: Position):
-        super().__init__(world, position, 0, 'firebrick1')
+    def __init__(self, world: World, position: Position, power=0):
+        super().__init__(world, position, power, 'firebrick1')
 
     def collision(self, other: Organism):
         other.power += 3
@@ -55,8 +55,8 @@ class Guarana(Plant):
 
 
 class Belladonna(Plant):
-    def __init__(self, world: World, position: Position):
-        super().__init__(world, position, 99, 'blue')
+    def __init__(self, world: World, position: Position, power=99):
+        super().__init__(world, position, power, 'blue')
 
     def collision(self, other: Organism):
         self.world.fields[other.position.y][other.position.x] = 0
@@ -65,8 +65,8 @@ class Belladonna(Plant):
 
 
 class Hogweed(Plant):
-    def __init__(self, world: World, position: Position):
-        super().__init__(world, position, 10, 'orchid')
+    def __init__(self, world: World, position: Position, power=10):
+        super().__init__(world, position, power, 'orchid')
 
     def action(self):
         from Animal import CyberSheep
