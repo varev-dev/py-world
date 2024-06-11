@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import simpledialog, Text
 
 from Organism import Organism
-from Animal import Animal
+from Animal import *
 from Position import Position
 from World import World
 
@@ -14,15 +14,20 @@ def next_turn(wrd: World, rt: tk.Tk, cnv: tk.Canvas, text: tk.Text):
 
 def create_new_world():
     global world
-    width = simpledialog.askinteger("Input", "Enter the width of the world:")
-    height = simpledialog.askinteger("Input", "Enter the height of the world:")
+    width = simpledialog.askinteger("Width", "Enter the width of the world:")
+    height = simpledialog.askinteger("Height", "Enter the height of the world:")
+
+    # plants = simpledialog.askfloat("Plants", "Enter percent of plants in world:")
+    # animals = simpledialog.askfloat("Animals", "Enter percent of animals in world:")
 
     if width is None or height is None:
         return None
 
     world = World(width, height, 0)
-    org = Animal(world, Position(0, 0), 2, 2, 1, 'blue')
-    world.add_organism(org)
+    organism1 = Sheep(world, Position(2, 2))
+    world.add_organism(organism1)
+    organism2 = Sheep(world, Position(1, 2))
+    world.add_organism(organism2)
 
     canvas.delete('all')
     text_area.delete('1.0', tk.END)
@@ -34,7 +39,7 @@ if __name__ == '__main__':
     root.title("Py World")
 
     world = World(10, 10, 2)
-    organism = Animal(world, Position(2, 2), 2, 2, 1, 'blue')
+    organism = Sheep(world, Position(2, 2))
     world.add_organism(organism)
 
     # Configure grid weights for proper stretching

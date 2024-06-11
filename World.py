@@ -27,7 +27,7 @@ class World:
         self.fields[organism.position.y][organism.position.x] = organism
 
     def remove_organism(self, organism):
-        self.fields[organism.position.y][organism.position.x] = None
+        self.fields[organism.position.y][organism.position.x] = 0
         self.organisms.remove(organism)
 
     def make_turn(self):

@@ -75,6 +75,23 @@ class Organism:
 
         return None
 
+    def get_adjacent_empty_field(self):
+        checked = [False] * len(Dire)
+
+        while not self.is_every_direction_checked(checked):
+            random_direction = random.choice(list(Dire))
+
+            if checked[random_direction.value]:
+                continue
+            checked[random_direction.value] = True
+
+            if not self.is_move_possible(random_direction):
+                continue
+
+            return self.position.updated_position(random_direction, self.world, self.move_size)
+
+        return None
+
     @abstractmethod
     def action(self):
         pass
